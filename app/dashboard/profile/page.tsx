@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
@@ -10,7 +10,7 @@ interface Member {
   membership_tier: string
   status: string
   join_date: string
-  benefits: any
+  benefits: Record<string, unknown> | null
 }
 
 export default function ProfilePage() {
@@ -22,11 +22,7 @@ export default function ProfilePage() {
   const [email, setEmail] = useState('')
   const [member, setMember] = useState<Member | null>(null)
 
-  useEffect(() => {
-    loadProfile()
-  }, [])
-
-  const loadProfile = async () => {
+  const loadProfile = useCallback(async () => {
     try {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
@@ -46,12 +42,16 @@ export default function ProfilePage() {
 
       if (memberError) throw memberError
       setMember(memberData)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
       setLoading(false)
     }
-  }
+  }, [router])
+
+  useEffect(() => {
+    loadProfile()
+  }, [loadProfile])
 
   const handleUpdateProfile = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -77,8 +77,8 @@ export default function ProfilePage() {
 
       setSuccess('Profile updated successfully!')
       setTimeout(() => setSuccess(null), 3000)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
       setSaving(false)
     }

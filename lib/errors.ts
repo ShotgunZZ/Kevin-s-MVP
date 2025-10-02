@@ -70,7 +70,7 @@ export function formatError(error: unknown): {
 }
 
 // Error logging function
-export function logError(error: unknown, context?: Record<string, any>) {
+export function logError(error: unknown, context?: Record<string, unknown>) {
   const formattedError = formatError(error)
 
   console.error('[Error]', {

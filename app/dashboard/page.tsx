@@ -35,7 +35,7 @@ export default async function DashboardPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Welcome Back!</h1>
         <p className="text-muted-foreground">
-          Here's what's happening with your tickets
+          Here&apos;s what&apos;s happening with your tickets
         </p>
       </div>
 
@@ -99,7 +99,7 @@ export default async function DashboardPage() {
             </div>
             <div>
               <p className="font-semibold">Post a Ticket</p>
-              <p className="text-sm text-muted-foreground">Share tickets you can't use</p>
+              <p className="text-sm text-muted-foreground">Share tickets you can&apos;t use</p>
             </div>
           </Link>
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
@@ -34,11 +34,7 @@ export default function ActivityPage() {
     totalDonations: 0,
   })
 
-  useEffect(() => {
-    loadActivity()
-  }, [])
-
-  const loadActivity = async () => {
+  const loadActivity = useCallback(async () => {
     try {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
@@ -104,12 +100,16 @@ export default function ActivityPage() {
 
         setActivities(activitiesWithTickets)
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error loading activity:', err)
     } finally {
       setLoading(false)
     }
-  }
+  }, [router])
+
+  useEffect(() => {
+    loadActivity()
+  }, [loadActivity])
 
   const getActionIcon = (actionType: string) => {
     switch (actionType.toLowerCase()) {

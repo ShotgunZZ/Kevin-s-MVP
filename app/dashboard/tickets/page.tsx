@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter, useSearchParams } from 'next/navigation'
 
@@ -34,14 +34,7 @@ export default function TicketsPage() {
   const [formError, setFormError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
-  useEffect(() => {
-    loadTickets()
-    if (searchParams.get('action') === 'new') {
-      setShowModal(true)
-    }
-  }, [searchParams])
-
-  const loadTickets = async () => {
+  const loadTickets = useCallback(async () => {
     try {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
@@ -76,12 +69,19 @@ export default function TicketsPage() {
         setMyTickets(mine)
         setTickets(others)
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error loading tickets:', err)
     } finally {
       setLoading(false)
     }
-  }
+  }, [router])
+
+  useEffect(() => {
+    loadTickets()
+    if (searchParams.get('action') === 'new') {
+      setShowModal(true)
+    }
+  }, [loadTickets, searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -126,8 +126,8 @@ export default function TicketsPage() {
       resetForm()
       setShowModal(false)
       loadTickets()
-    } catch (err: any) {
-      setFormError(err.message)
+    } catch (err: unknown) {
+      setFormError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
       setSubmitting(false)
     }
@@ -154,8 +154,8 @@ export default function TicketsPage() {
 
       if (error) throw error
       loadTickets()
-    } catch (err: any) {
-      alert('Error deleting ticket: ' + err.message)
+    } catch (err: unknown) {
+      alert('Error deleting ticket: ' + (err instanceof Error ? err.message : 'An error occurred'))
     }
   }
 
@@ -275,7 +275,7 @@ export default function TicketsPage() {
           </div>
         ) : (
           <div className="bg-card border border-border rounded-lg p-8 text-center">
-            <p className="text-muted-foreground">You haven't posted any tickets yet</p>
+            <p className="text-muted-foreground">You haven&apos;t posted any tickets yet</p>
           </div>
         )}
       </div>

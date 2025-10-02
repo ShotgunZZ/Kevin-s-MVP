@@ -19,7 +19,7 @@ export default function LandingPage() {
               <span className="text-primary">Make Every Game Count.</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-              A members-only portal where you can share tickets you can't use,
+              A members-only portal where you can share tickets you can&apos;t use,
               help fellow members attend events, and strengthen our community.
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
@@ -60,7 +60,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-semibold mb-2">Share or Donate Tickets</h3>
               <p className="text-muted-foreground">
-                Can't make it to a game? Post your tickets for swap or donation. Help a fellow member attend instead of letting seats go empty.
+                Can&apos;t make it to a game? Post your tickets for swap or donation. Help a fellow member attend instead of letting seats go empty.
               </p>
             </div>
 
